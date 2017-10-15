@@ -1,0 +1,32 @@
+version: '3'
+services:
+  api:
+    image: node:$NODE_VERSION
+    working_dir: /code
+    environment: 
+      - CONNECTION_STRING=mongodb://database/node-angular
+    ports:
+      - 3000:3000
+    volumes:
+      - /code/node_modules
+      - ./api:/code
+      - ./.docker/wait_for_it.sh:/code/wait_for_it.sh
+    entrypoint: bash -c "npm install --silent --production &&  ./wait_for_it.sh database:27017 -- npm start"
+  website:
+    build: 
+      context: .
+      args:
+        - BUILD_COMMAND=$BUILD_COMMAND
+    ports:
+      - 4200:80
+    volumes:
+      - ./.docker/nginx.config:/etc/nginx/nginx.conf
+  database:
+    image: mongo:$MONGO_VERSION
+    ports:
+      - 27017:27017
+    volumes:
+      #Leave if you want a fresh database
+      - /data/db
+      #Uncomment if you want to use your own data
+      # - ./.docker/data:/data/db

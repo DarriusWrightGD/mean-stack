@@ -1,0 +1,14 @@
+<article class="card">
+  <div class="card-body">
+    <p class="card-text">{{message.content}}</p>
+    <footer class="blockquote-footer">
+      <small class="text-muted">
+        {{message.username}}
+      </small>
+      <div class="float-right">
+        <button href="#" class="btn btn-link" (click)="onEdit()">Edit</button>
+        <button href="#" class="btn btn-link" (click)="onDelete()">Delete</button>
+      </div>
+    </footer>
+  </div>
+</article>
