@@ -1,7 +1,9 @@
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var express = require('express')
-var messageRoutes = require('./routes/message/app');
+var appRoutes = require('./routes/app');
+var messageRoutes = require('./routes/messages');
+var userRoutes = require('./routes/user');
 var mongoose = require('mongoose');
 
 var app = express();
@@ -26,11 +28,9 @@ app.use((req, res, next) => {
     next();
 });
 
-app.get('/', (req, res) => {
-    res.send('Hello from express!');
-});
 
 app.use('/message', messageRoutes);
+app.use('/', appRoutes);
 
 app.listen(port, () => {
     console.log(`Server started at port: ${port}`);

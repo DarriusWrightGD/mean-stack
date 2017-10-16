@@ -1,11 +1,4 @@
+<app-header></app-header>
 <div class="container">
-  <div class="row">
-    <div class="col-md-12">
-      <div class="form-group">
-        <label for="messageInput">Message</label>
-        <input type="text" class="form-control" id="messageInput" placeholder="Enter message here" [(ngModel)]="message.content">
-      </div>
-      <app-message [message]='message' (editClicked)="onEdit($event)" (deleteClicked)="onDelete($event)"></app-message>
-    </div>
-  </div>
+  <router-outlet></router-outlet>
 </div>

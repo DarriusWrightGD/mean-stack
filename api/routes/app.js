@@ -1,5 +1,5 @@
 var router = require('express').Router();
-var User = require('../../models/user');
+var User = require('../models/user');
 
 router.get('/', (req, res)=>{
     User.findOne({})

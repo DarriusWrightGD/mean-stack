@@ -1,4 +1,4 @@
-<article class="card">
+<article class="card mb-3">
   <div class="card-body">
     <p class="card-text">{{message.content}}</p>
     <footer class="blockquote-footer">
@@ -6,8 +6,8 @@
         {{message.username}}
       </small>
       <div class="float-right">
-        <button href="#" class="btn btn-link" (click)="onEdit()">Edit</button>
-        <button href="#" class="btn btn-link" (click)="onDelete()">Delete</button>
+        <button class="btn btn-link" (click)="onEdit()">Edit</button>
+        <button class="btn btn-link" (click)="onDelete()">Delete</button>
       </div>
     </footer>
   </div>
