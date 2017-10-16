@@ -6,6 +6,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:docker": "ng build -e docker --aot",
     "build:prod": "ng build -e prod --aot",
     "test": "ng test",
     "lint": "ng lint",

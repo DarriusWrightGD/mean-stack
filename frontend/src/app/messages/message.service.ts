@@ -3,12 +3,15 @@ import { Message } from './message.model';
 import { Http, RequestOptionsArgs, Headers } from '@angular/http';
 import 'rxjs/Rx';
 import { Observable } from 'rxjs/Observable';
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class MessageService {
 
   private messages: Message[] = [];
+  private apiUrl = environment.apiUrl;
   public editMessageEvent = new EventEmitter();
+
 
   constructor(private http: Http) { }
 
@@ -16,7 +19,7 @@ export class MessageService {
     const body = JSON.stringify(message);
     const headers = new Headers({'Content-Type': 'application/json'});
     return this.http
-      .post('http://localhost:3000/message', body, {headers: headers})
+      .post( this.apiUrl + '/message', body, {headers: headers})
       .map( response => {
         const result = response.json();
         const newMessage = new Message(result.content, 'User', result._id);
@@ -29,7 +32,7 @@ export class MessageService {
 
   public getMessages(): Observable<Message[]> {
     return this.http
-      .get('http://localhost:3000/message')
+      .get(this.apiUrl + '/message')
       .map( response => {
         const messages = response.json();
         this.messages = messages.map(m => new Message(m.content, 'User', m._id));
@@ -46,7 +49,7 @@ export class MessageService {
     const body = JSON.stringify(message);
     const headers = new Headers({'Content-Type': 'application/json'});
     return this.http
-      .patch(`http://localhost:3000/message/${message.messageId}`, body, {headers: headers})
+      .patch(`${this.apiUrl}/message/${message.messageId}`, body, {headers: headers})
       .map( response => <Message>response.json())
       .catch(error => Observable.throw(error.json()));
   }
@@ -54,7 +57,7 @@ export class MessageService {
   public deleteMessage(message: Message) {
     this.messages.splice(this.messages.indexOf(message), 1);
     return this.http
-      .delete(`http://localhost:3000/message/${message.messageId}`)
+      .delete(`${this.apiUrl}/message/${message.messageId}`)
       .map( response => response.json())
       .catch(error => Observable.throw(error.json()));
 
