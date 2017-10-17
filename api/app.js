@@ -30,6 +30,7 @@ app.use((req, res, next) => {
 
 
 app.use('/message', messageRoutes);
+app.use('/user', userRoutes);
 app.use('/', appRoutes);
 
 app.listen(port, () => {

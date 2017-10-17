@@ -26,4 +26,8 @@ export class MessageComponent implements OnInit {
     this.messageService.deleteMessage(this.message)
       .subscribe();
   }
+
+  public belongsToUser() {
+    return localStorage.getItem('userId') === this.message.userId;
+  }
 }

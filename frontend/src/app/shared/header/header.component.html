@@ -14,8 +14,8 @@
           <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Authentication</a>
           <div class="dropdown-menu">
             <a class="dropdown-item" routerLinkActive="active" [routerLink]="['auth/signup']">Sign Up</a>
-            <a class="dropdown-item" routerLinkActive="active" [routerLink]="['auth/signin']">Sign In</a>
-            <a class="dropdown-item" routerLinkActive="active" [routerLink]="['auth/logout']">Logout</a>
+            <a class="dropdown-item" *ngIf="!isLoggedIn()" routerLinkActive="active" [routerLink]="['auth/signin']">Sign In</a>
+            <a class="dropdown-item" *ngIf="isLoggedIn()" routerLinkActive="active" [routerLink]="['auth/logout']">Logout</a>
           </div>
         </li>
       </ul>

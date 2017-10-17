@@ -18,11 +18,12 @@ export class MessageService {
   public addMessage(message: Message): Observable<Message> {
     const body = JSON.stringify(message);
     const headers = new Headers({'Content-Type': 'application/json'});
+
     return this.http
-      .post( this.apiUrl + '/message', body, {headers: headers})
+      .post( `${this.apiUrl}/message${this.token}`, body, {headers: headers})
       .map( response => {
         const result = response.json();
-        const newMessage = new Message(result.content, 'User', result._id);
+        const newMessage = new Message(result.content, result.user.firstName, result._id, result.user._id);
         this.messages.push(newMessage);
         return newMessage;
       })
@@ -35,7 +36,7 @@ export class MessageService {
       .get(this.apiUrl + '/message')
       .map( response => {
         const messages = response.json();
-        this.messages = messages.map(m => new Message(m.content, 'User', m._id));
+        this.messages = messages.map(m => new Message(m.content, m.user.firstName, m._id, m.user._id));
         return this.messages;
       })
       .catch( error => Observable.throw(error));
@@ -49,7 +50,7 @@ export class MessageService {
     const body = JSON.stringify(message);
     const headers = new Headers({'Content-Type': 'application/json'});
     return this.http
-      .patch(`${this.apiUrl}/message/${message.messageId}`, body, {headers: headers})
+      .patch(`${this.apiUrl}/message/${message.messageId}${this.token}`, body, {headers: headers})
       .map( response => <Message>response.json())
       .catch(error => Observable.throw(error.json()));
   }
@@ -57,9 +58,13 @@ export class MessageService {
   public deleteMessage(message: Message) {
     this.messages.splice(this.messages.indexOf(message), 1);
     return this.http
-      .delete(`${this.apiUrl}/message/${message.messageId}`)
+      .delete(`${this.apiUrl}/message/${message.messageId}${this.token}`)
       .map( response => response.json())
       .catch(error => Observable.throw(error.json()));
 
+  }
+
+  private get token() {
+    return localStorage.getItem('token') ? '?token=' + localStorage.getItem('token') : '';
   }
 }

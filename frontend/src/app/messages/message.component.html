@@ -5,7 +5,7 @@
       <small class="text-muted">
         {{message.username}}
       </small>
-      <div class="float-right">
+      <div *ngIf="belongsToUser()" class="float-right">
         <button class="btn btn-link" (click)="onEdit()">Edit</button>
         <button class="btn btn-link" (click)="onDelete()">Delete</button>
       </div>
