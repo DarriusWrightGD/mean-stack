@@ -4,6 +4,14 @@ var Message = require('../models/message');
 var _ = require('lodash');
 var jwt = require('jsonwebtoken');
 
+
+router.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    res.setHeader('Access-Control-Allow-Methods', 'POST, GET, PATCH, DELETE, OPTIONS');
+    next();
+});
+
 router.get('/', (req, res) => {
     Message.find()
         .populate('user', 'firstName')
@@ -19,10 +27,11 @@ router.get('/', (req, res) => {
         })
 })
 
-router.use('/', (req, res, next) => {
+
+router.use((req, res, next) => {
     jwt.verify(req.query.token, 'secret', (err, decoded) => {
         if (err) {
-            return res.status(401).json({
+            return res.status(401).send({
                 title: 'Not Authenticated Before',
                 error: err
             });
