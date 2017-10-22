@@ -5,49 +5,52 @@ var jwt = require('jsonwebtoken');
 
 var _ = require('lodash')
 
-router.post('/', (req, res)=>{
+router.post('/', async (req, res) => {
     var body = _.pick(req.body, ['firstName', 'lastName', 'email', 'password']);
     body.password = bcrypt.hashSync(body.password, 10);
     var user = new User(body);
-    user.save()
-        .then( result => res.status(201).send(result))
-        .catch( error => res.status(500).send({
+    try {
+        res.status(201).send(await user.save());
+    } catch (error) {
+        res.status(500).send({
             title: 'An error occurred',
             error: error
-        }));
+        });
+    }
 });
 
-router.post('/signin', (req, res)=>{
-    User.findOne({email: req.body.email})
-        .then( foundUser => {
-            if(!foundUser) {
-                return res.status(500).send({
-                    title: 'Login failed',
-                    error: {message: 'Invalid login credentials'}
-                })
-            }
+router.post('/signin', async (req, res) => {
+    try {
+        let foundUser = await User.findOne({ email: req.body.email });
 
-            bcrypt.compare(req.body.password, foundUser.password)
-                .then( result => {
-                    if(!result) {
-                        return res.status(500).send({
-                            title: 'Login failed',
-                            error: {message: 'Invalid login credentials'}
-                        })
-                    }
+        if (!foundUser) {
+            return res.status(500).send({
+                title: 'Login failed',
+                error: { message: 'Invalid login credentials' }
+            })
+        }
 
-                    var token = jwt.sign({user: foundUser}, 'secret', { expiresIn: 7200 });
-                    res.status(200).json({
-                        message: 'Successfully logged in.',
-                        token: token,
-                        userId: foundUser._id
-                    })
-                });
+        let compareResult = await bcrypt.compare(req.body.password, foundUser.password);
+
+        if (!compareResult) {
+            return res.status(500).send({
+                title: 'Login failed',
+                error: { message: 'Invalid login credentials' }
+            })
+        }
+
+        var token = jwt.sign({ user: foundUser }, 'secret', { expiresIn: 7200 });
+        res.status(200).json({
+            message: 'Successfully logged in.',
+            token: token,
+            userId: foundUser._id
         })
-        .catch( error => res.status(500).send({
+    } catch (error) {
+        res.status(500).send({
             title: 'An error occurred',
             error: error
-        }));
+        });
+    }
 });
 
 
