@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, EventEmitter } from '@angular/core';
 import {Message} from './message.model';
 import { MessageService } from './message.service';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-message',
@@ -16,7 +17,6 @@ export class MessageComponent implements OnInit {
 
   ngOnInit() {
   }
-
 
   public onEdit() {
     this.messageService.editMessage(this.message);

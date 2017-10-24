@@ -1,7 +1,7 @@
-import { Component, OnInit, EventEmitter } from '@angular/core';
+import { Component, OnInit, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { Message } from '../message.model';
 import { MessageService } from '../message.service';
-import { NgForm } from '@angular/forms';
+import { NgForm, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-message-input',
@@ -10,7 +10,8 @@ import { NgForm } from '@angular/forms';
 })
 export class MessageInputComponent implements OnInit {
   public formMessage: Message;
-
+  @ViewChild('formElement')
+  public formGroup: ElementRef;
 
   constructor(private messageService: MessageService) { }
 
@@ -19,6 +20,10 @@ export class MessageInputComponent implements OnInit {
       .subscribe(
       message => this.formMessage = message
       );
+  }
+
+  public hasChanges(): boolean {
+    return this.formGroup.nativeElement.classList.contains('ng-dirty');
   }
 
   public onSave(form: NgForm) {

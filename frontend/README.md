@@ -1,27 +1,280 @@
 # MeanStack
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.4.7.
+## Routing
 
-## Development server
+Navigation should only happen through the directive routerLink, not href.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Note: **href will cause the page to completely reload, which is unesscary**
 
-## Code scaffolding
+``` html
+<a routerLink="/home">Home</a>
+<a [routerLink]="'/home'">Home</a>
+<a [routerLink]="['home']">Home</a>
+```
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+When using relative paths, without a starting slash, the link that you specify will be appended to the end of the link.
 
-## Build
+### Active Route
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
+Angular gives a specific directive to add add classes to the current active router link.
 
-## Running unit tests
+``` html
+<a routerLinkActive="active" [routerLink]="'/home'">Home</a>
+```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+This will add the specified class when the routerLink on the element or subelement has been selected.
 
-## Running end-to-end tests
+Note: **There are times where you need to set options for the selected routerLink. This is where routerLinkActiveOptions come into play.**
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+``` html
+<a routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"[routerLink]="'/home'">Home</a>
 
-## Further help
+```
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+### Programatic Navigation
+
+This occurs through the injejction of the router into a class, then you can execute the **navigate** function.
+
+``` typescript
+...
+export class HomeComponent {
+  constructor(private router: Router) {
+
+  }
+
+  public onLoadServer () {
+    this.router.navigate(['/servers'])
+  }
+}
+```
+
+Note: **Unlike the routerLink, the injected router will not know what page you are currently on. Therefore if you want relative paths you will have to supply them in the extra parameter.**
+
+``` typescript
+...
+export class HomeComponent {
+  constructor(private router: Router, private route: ActivatedRoute) {
+
+  }
+
+  public onLoadServer () {
+    this.router.navigate(['/servers'], {this.relativeTo: this.route})
+  }
+}
+```
+
+### Routing parameters
+
+In order to have a route receive an id you must add a colon, and then the name of your parameter to the route as shown below.
+
+``` typescript
+
+const appRoutes: Routes = [
+  ...
+  {path: 'users/:id', component: UserComponent}
+  ...
+]
+
+```
+
+In order to retreive the parameter that was set we need to take advantage of the ActivatedRoute class.
+
+``` typescript
+...
+export class HomeComponent implements OnInit {
+
+  private id:string;
+
+  constructor(private router: Router, private route: ActivatedRoute) {
+
+  }
+
+  public ngOnInit() {
+    this.id = this.route.snapshot.params['id'];
+
+    // in case the parameters change while still on this route.
+    // If you know 100% of the time that the component will not go to the same url then you do not need this code.
+    this.route.params
+      .subscribe(p => this.id = p['id'])
+  }
+
+}
+```
+
+### Query Parameters, and Fragments
+
+#### In html
+
+``` html
+<a routerLinkActive="active" [routerLink]="'/home'"
+[queryParams] = "{allowChanges: '1'}"
+[fragment] = "loading"
+>Home</a>
+```
+
+#### In Code
+``` typescript
+...
+export class HomeComponent {
+  constructor(private router: Router, private route: ActivatedRoute) {
+
+  }
+
+  public onLoadServer () {
+    this.router.navigate(['/servers'], {queryParams: {allowChanges:'1'}, fragment: 'loading'})
+  }
+}
+```
+
+Note: **If you would like to keep the query parameters that came from the previous route, you have the ability to simply add "queryParamsHandling:'preserve'" to your extra parameters.**
+
+
+#### Retreival
+
+
+``` typescript
+...
+export class HomeComponent implements OnInit {
+
+  private id:string;
+
+  constructor(private router: Router, private route: ActivatedRoute) {
+
+  }
+
+  public ngOnInit() {
+    let allowChanges = this.route.snapshot.queryParams['allowChanges'];
+    let fragment = this.route.snapshot.fragment;
+
+    this.route.queryParams
+      .subscribe(p => allowChanges = p['allowChanges'])
+    this.route.fragment
+      .subscribe(f => fragment = f)
+
+  }
+
+}
+```
+
+Note: **When you subscribe to anything from the ActivatedRoute angular will automatically unsubscribe from the observable. Whereas with your custom observables you will need to unsubscribe yourself.**
+
+### Child Routes
+
+``` typescript
+// You will also need to add a <router-outlet> to the UsersComponent page.
+const appRoutes: Routes = [
+  ...
+  {path: 'users', component: UsersComponent, children: [
+    {path: ':id', component: UserComponent}
+  ]}
+  ...
+]
+
+```
+
+### Redirect and Wildcard Routes
+
+The most useful case for these two features are for handlings pages that are not supported by your angular application.
+
+i.e.
+
+
+``` typescript
+// You will also need to add a <router-outlet> to the UsersComponent page.
+const appRoutes: Routes = [
+  ...
+  {path: 'not-found', component: PageNotFoundComponent },
+  {path: '**', redirectTo: '/not-found'}
+]
+
+```
+
+### Routing Module
+
+As you gain a lot of routes, it can become aparent that you need a higher level abstraction. The current recommended way is to create a RoutingModule for your application.
+
+i.e.
+
+``` typescript
+import {Routes, RouterModule} from '@angular/router';
+import { MessagesComponent } from './messages/messages.component';
+import { AuthenticationComponent } from './auth/authentication.component';
+import { authRouting } from './auth/auth.routing';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { NgModule } from '@angular/core';
+
+const APP_ROUTES: Routes = [
+  {path: '', redirectTo: '/messages', pathMatch: 'full' },
+  {path: 'messages', component: MessagesComponent },
+  {path: 'auth', component: AuthenticationComponent, loadChildren: './auth/auth.module#AuthModule' },
+  {path: 'not-found', component: PageNotFoundComponent},
+  {path: '**', redirectTo: '/not-found'}
+];
+
+@NgModule({
+  imports: [RouterModule.forRoot(APP_ROUTES)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule {}
+
+```
+
+### Route Guards
+
+Logic that occurs before entering a route, and after you have left a route.
+
+#### CanActivate and CanActivateChild
+
+These interfaces can be used in conjunction with your array of routes to decide if a user can visit a route. CanActivate affects the route that it is attacted to, whereas CanActivateChild effects the children of the route that it is attacted to.
+
+i.e.
+
+``` typescript
+@Injectable()
+export class AuthGuardService implements CanActivate, CanActivateChild {
+
+  constructor(private authService: AuthService, private router: Router) { }
+
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+    if (this.authService.isLoggedIn()) {
+      return true;
+    }else {
+      this.router.navigate(['/auth', 'signin']);
+    }
+  }
+
+  canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+    return this.canActivate(childRoute, state);
+  }
+}
+
+```
+
+``` typescript
+// You will also need to add a <router-outlet> to the UsersComponent page.
+const appRoutes: Routes = [
+  ...
+  {path: 'users', canActivateChild: [AuthGuardService], component: UsersComponent, children: [
+    {path: ':id', component: UserComponent}
+  ]},
+  {path: 'messages', component: MessagesComponent, canActivate: [AuthGuardService]}
+  ...
+]
+
+```
+
+#### CanDeactivate
+
+This works similar to the CanActivate interface, but for deactivation.
+
+
+``` typescript
+// You will also need to add a <router-outlet> to the UsersComponent page.
+const appRoutes: Routes = [
+  ...
+  {path: 'messages', component: MessagesComponent, canActivate: [AuthGuardService]}
+  canDeactivate: [CanDeactivateGuardService]
+  ...
+]
+
+```
