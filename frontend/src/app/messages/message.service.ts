@@ -1,17 +1,18 @@
-import { Injectable, EventEmitter } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Message } from './message.model';
 import { Http, RequestOptionsArgs, Headers, Response } from '@angular/http';
 import 'rxjs/Rx';
 import { Observable } from 'rxjs/Observable';
 import { environment } from '../../environments/environment';
 import { ErrorService } from '../errors/error.service';
+import { Subject } from 'rxjs/Subject';
 
 @Injectable()
 export class MessageService {
 
   private messages: Message[] = [];
   private apiUrl = environment.apiUrl;
-  public editMessageEvent = new EventEmitter();
+  public editMessageEvent = new Subject<Message>();
 
 
   constructor(private http: Http, private errorService: ErrorService) { }
@@ -52,7 +53,7 @@ export class MessageService {
   }
 
   public editMessage(message: Message) {
-    this.editMessageEvent.emit(message);
+    this.editMessageEvent.next(message);
   }
 
   public updateMessage(message: Message) {

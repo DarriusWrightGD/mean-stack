@@ -1,15 +1,16 @@
-import { Injectable, EventEmitter } from '@angular/core';
+import { Injectable } from '@angular/core';
 
 import {Error} from './error';
+import { Subject } from 'rxjs/Subject';
 
 @Injectable()
 export class ErrorService {
-  errorOccurred = new EventEmitter<Error>();
+  errorOccurred = new Subject<Error>();
   constructor() { }
 
   public handleError(error: any) {
     const errorData = new Error(error.title, error.error.message);
-    this.errorOccurred.emit(errorData);
+    this.errorOccurred.next(errorData);
   }
 
 }

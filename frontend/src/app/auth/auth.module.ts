@@ -4,7 +4,7 @@ import { SigninComponent } from './signin/signin.component';
 import { AuthenticationComponent } from './authentication.component';
 import { LogoutComponent } from './logout/logout.component';
 import { AuthService } from './auth.service';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { authRouting } from './auth.routing';
 import { AuthGuardService } from './auth-guard.service';
@@ -19,6 +19,7 @@ import { AuthGuardService } from './auth-guard.service';
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    FormsModule,
     authRouting
   ],
   providers: [AuthService]

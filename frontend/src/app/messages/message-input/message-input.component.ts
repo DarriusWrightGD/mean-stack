@@ -1,25 +1,32 @@
-import { Component, OnInit, EventEmitter, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, EventEmitter, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { Message } from '../message.model';
 import { MessageService } from '../message.service';
 import { NgForm, FormGroup } from '@angular/forms';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-message-input',
   templateUrl: './message-input.component.html',
   styleUrls: ['./message-input.component.css']
 })
-export class MessageInputComponent implements OnInit {
+export class MessageInputComponent implements OnInit, OnDestroy {
   public formMessage: Message;
   @ViewChild('formElement')
   public formGroup: ElementRef;
 
+  private editMessageSubscription: Subscription;
+
   constructor(private messageService: MessageService) { }
 
   ngOnInit() {
-    this.messageService.editMessageEvent
+    this.editMessageSubscription = this.messageService.editMessageEvent
       .subscribe(
       message => this.formMessage = message
       );
+  }
+
+  ngOnDestroy() {
+    this.editMessageSubscription.unsubscribe();
   }
 
   public hasChanges(): boolean {

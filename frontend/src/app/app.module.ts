@@ -13,6 +13,8 @@ import { MessageModule } from './messages/message.module';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { AuthGuardService } from './auth/auth-guard.service';
 import { CanDeactivateGuardService } from './messages/can-deactivate-guard.service';
+import { ErrorPageComponent } from './errors/error-page/error-page.component';
+import { MessageResolverService } from './messages/message-resolver.service';
 
 @NgModule({
   declarations: [
@@ -20,7 +22,8 @@ import { CanDeactivateGuardService } from './messages/can-deactivate-guard.servi
     AuthenticationComponent,
     HeaderComponent,
     ErrorComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    ErrorPageComponent
   ],
   imports: [
     BrowserModule,
@@ -28,7 +31,10 @@ import { CanDeactivateGuardService } from './messages/can-deactivate-guard.servi
     HttpModule,
     AppRoutingModule
   ],
-  providers: [AuthService, ErrorService, AuthGuardService, CanDeactivateGuardService],
+  providers: [AuthService, ErrorService,
+    AuthGuardService, CanDeactivateGuardService,
+    MessageResolverService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

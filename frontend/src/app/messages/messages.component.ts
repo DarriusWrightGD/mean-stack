@@ -2,6 +2,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MessageInputComponent } from './message-input/message-input.component';
 import { CanDeactivateComponent } from './can-deactivate-guard.service';
 import { Observable } from 'rxjs/Observable';
+import { ActivatedRoute } from '@angular/router';
+import { Message } from './message.model';
 
 @Component({
   selector: 'app-messages',
@@ -12,9 +14,15 @@ export class MessagesComponent implements OnInit, CanDeactivateComponent {
   @ViewChild('messageInput')
   public messageInput: MessageInputComponent;
 
-  constructor() { }
+  public messages: Message[];
+
+  constructor(private route: ActivatedRoute) { }
 
   ngOnInit() {
+    this.route.data
+      .subscribe( data =>
+        this.messages = data['messages']
+      );
   }
 
   public canDeactivate(): boolean | Observable<boolean> | Promise<boolean> {

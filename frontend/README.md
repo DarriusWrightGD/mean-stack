@@ -1,5 +1,23 @@
 # MeanStack
 
+## Best Practices
+
+### Modules
+
+It best to have a CoreModule (services), SharedModule (shared components), and FeatureModules (features).
+
+### Lazy Loading
+
+Lazy load your feature modules, this will give you a performance boost for your application if you do not have to load the entire application every time.
+
+### Project size
+
+npm install -g source-map-explorer
+npm run build -- --prod --sourcemaps=true
+source-map-explorer vendor.123cr2c.bundle.js
+
+This will inform you of what imports that you are using, and how much space that they are taking up.
+
 ## Routing
 
 Navigation should only happen through the directive routerLink, not href.
@@ -276,5 +294,169 @@ const appRoutes: Routes = [
   canDeactivate: [CanDeactivateGuardService]
   ...
 ]
+
+```
+
+### Resolver
+
+A great feature of angular is that you can resolve essential data to a component before it ever reaches it. This can be done through the resolver interface. Simply inherit from the Resolve and specify it's type. Then specify the resolver in your router.
+
+
+``` typescript
+const APP_ROUTES = [ 
+  ...
+  {path: 'messages', resolve: {messages: MessageResolverService},
+  ...
+]
+```
+
+``` typescript
+@Injectable()
+export class MessageResolverService implements Resolve<Array<Message>> {
+
+  constructor(private messageService: MessageService) { }
+
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Message[] | Observable<Message[]> | Promise<Message[]> {
+    return this.messageService.getMessages();
+  }
+}
+```
+
+
+``` typescript
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MessageInputComponent } from './message-input/message-input.component';
+import { CanDeactivateComponent } from './can-deactivate-guard.service';
+import { Observable } from 'rxjs/Observable';
+import { ActivatedRoute } from '@angular/router';
+import { Message } from './message.model';
+
+@Component({
+  selector: 'app-messages',
+  templateUrl: './messages.component.html',
+  styleUrls: ['./messages.component.css']
+})
+export class MessagesComponent implements OnInit, CanDeactivateComponent {
+...
+  public messages: Message[];
+
+  constructor(private route: ActivatedRoute) { }
+
+  ngOnInit() {
+    this.route.data
+      .subscribe( data =>
+        this.messages = data['messages']
+      );
+  }
+...
+}
+
+```
+
+### Location Strategies
+
+Note: **The server hosting your application must redirect to the index.html page on 404s, thus it will be able to always handle the route.**
+
+If you cannot get the 404 redirect to work you can specify **useHash** in your router and this will allow you to tell the server to ignore your route. Though if possible you should not use this techinque.
+
+## Observable
+
+What is an observable? A data source that will emit data to the observer. There can be multiple events that are emitted to the observer.
+
+The observer has three ways of handling data from an Observable.
+
+- Handle data
+- Handle error
+- Handle completion **Observables do not have to have a completion.**
+
+Observables is simply a different approach to handing async calls.
+
+### Subscribe and Unsubscribe
+
+``` typescript
+...
+export class AppComponent implements OnInit, OnDestroy {
+  private numbersObservable: Subscription;
+  private customSubscription: Subscription;
+
+  ngOnDestroy(): void {
+    this.customSubscription.unsubscribe();
+  }
+
+  ngOnInit(): void {
+
+    const myNumbers = Observable.interval(1000);
+
+    this.numbersObservable = myNumbers.subscribe(
+      (number) => console.log(number)
+    );
+
+    const myObservable = Observable.create((observer: Observer<any>) => {
+      setTimeout(() => {
+        observer.next('First package');
+      }, 2000);
+
+      setTimeout(() => {
+        observer.next('Second package');
+      }, 4000);
+
+      setTimeout(() => {
+        // observer.error('Failed!');
+        observer.complete();
+      }, 5000);
+    });
+
+    this.customSubscription =  myObservable.subscribe((data: string) => {
+      console.log(data);
+    }, (error: string) => {
+      console.log(error);
+    }, () => console.log('completed'));
+  }
+}
+```
+
+### Subject
+
+This is both an observer and an observable. As it can seen new messages via the next operator and you can subscribe to the messages that are being outputted.
+
+Note: **When subscribing to a Subject you need to be sure that you unsubscribe from it once you are done, for example in ngOnDestroy.**
+
+## Template Driven vs Reactive Forms
+
+### Template Driven Forms
+
+These are inferred by angular through the Forms Object from the dom.
+
+Note: Validators
+https://angular.io/api/forms/Validators
+
+When there is an issue with the form, angular will cascade and add the ng-invalid class to all elements within the form.
+
+### Reactive
+
+The form is created programmatically and synchronized with the DOM. This route gives you greater control over the form.
+
+With reactive forms to attact the html form to the angular form group that has been created you will need to use the following directive.
+
+``` html
+<form [formGroup]="signupForm">
+  <input formControlName="firstName">
+  <span *ngIf="!signupForm.get('username').valid && signupForm.get('username').touched">Please enter a first name</span>
+  ...
+</form>
+```
+
+``` typescript
+export class SignupComponent implements OnInit {
+
+  signupForm: FormGroup;
+
+  ngOnInit() {
+    signupForm = new FormGroup({
+      'firstName': new FormControl(null, Validators.required)
+      ...
+    });
+  }
+}
 
 ```

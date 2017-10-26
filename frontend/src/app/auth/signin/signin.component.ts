@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, NgForm } from '@angular/forms';
 import { AuthService } from '../auth.service';
 import { User } from '../user.model';
 import { Router } from '@angular/router';
@@ -10,24 +10,15 @@ import { Router } from '@angular/router';
   styleUrls: ['./signin.component.css']
 })
 export class SigninComponent implements OnInit {
-  public signinForm: FormGroup;
-
   constructor(private authService: AuthService, private router: Router) { }
 
   ngOnInit() {
-    this.signinForm = new FormGroup({
-      email: new FormControl(null, [
-        Validators.required,
-        Validators.email
-      ]),
-      password: new FormControl(null, Validators.required),
-    });
   }
 
-  public onSignIn() {
+  public onSignIn(form: NgForm) {
     this.authService.signin(new User(
-      this.signinForm.value.email,
-      this.signinForm.value.password,
+      form.value.email,
+      form.value.password
     ))
     .subscribe(
       data => {
@@ -38,6 +29,6 @@ export class SigninComponent implements OnInit {
       error => console.error(error)
     );
 
-    this.signinForm.reset();
+    form.reset();
   }
 }
