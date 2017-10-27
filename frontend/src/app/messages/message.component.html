@@ -1,9 +1,9 @@
 <article class="card mb-3">
   <div class="card-body">
-    <p class="card-text">{{message.content}}</p>
+    <p class="card-text">{{message.content | shorten: 12}}</p>
     <footer class="blockquote-footer">
       <small class="text-muted">
-        {{message.username}}
+        {{message.username | uppercase }}
       </small>
       <div *ngIf="belongsToUser()" class="float-right">
         <button class="btn btn-link" (click)="onEdit()">Edit</button>

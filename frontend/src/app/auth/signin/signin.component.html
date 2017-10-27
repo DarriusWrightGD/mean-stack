@@ -11,7 +11,6 @@
         <input type="password" id="password" class="form-control" ngModel name="password" required>
       </div>
     </div>
-    <p *ngIf="!userData.valid && userData.touched">The user information is invalid.</p>
     <button [disabled]="!signInForm.valid" class="btn btn-primary" type="submit">Sign In</button>
   </form>
 </div>

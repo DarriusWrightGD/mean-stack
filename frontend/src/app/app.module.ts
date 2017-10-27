@@ -15,6 +15,7 @@ import { AuthGuardService } from './auth/auth-guard.service';
 import { CanDeactivateGuardService } from './messages/can-deactivate-guard.service';
 import { ErrorPageComponent } from './errors/error-page/error-page.component';
 import { MessageResolverService } from './messages/message-resolver.service';
+import { ShortenPipe } from './shorten.pipe';
 
 @NgModule({
   declarations: [

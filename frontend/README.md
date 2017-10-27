@@ -460,3 +460,46 @@ export class SignupComponent implements OnInit {
 }
 
 ```
+
+
+## Pipes
+
+These allow you to transform output in your application. For example transforming a string to all uppercase.
+
+``` html
+<p>{{ username | uppercase }}</p>
+```
+
+### Custom Pipes
+
+In order to create a pipe you will need to add the Pipe decorator to your class. It is best practice to implement the PipeTransform interface.
+
+``` typescript
+@Pipe({
+  name: 'shorten'
+})
+export class ShortenPipe implements PipeTransform {
+  transform(value: string, limit: number) {
+
+    const shortenAmount = limit || 10;
+
+    if (value.length > shortenAmount) {
+      return value.substr(0, shortenAmount) + '...';
+    }
+
+    return value;
+  }
+}
+```
+
+### Pure vs Impure Pipes
+
+Angular does not rerun your pipe if an array or object updates. This is a high performance cost. This can be force by setting the **pure property to false** within the **Pipe** decorator.
+
+### Async Pipe
+
+This pipe is for converting promises and observables into the data that we expect.
+
+``` html
+<p>{{ appStatus | async | uppercase }}</p>
+```

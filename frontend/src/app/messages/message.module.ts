@@ -6,6 +6,7 @@ import { MessagesComponent } from './messages.component';
 import { MessageInputComponent } from './message-input/message-input.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ShortenPipe } from '../shorten.pipe';
 
 
 @NgModule({
@@ -13,7 +14,8 @@ import { FormsModule } from '@angular/forms';
     MessageComponent,
     MessageListComponent,
     MessagesComponent,
-    MessageInputComponent
+    MessageInputComponent,
+    ShortenPipe
   ],
   imports: [
     CommonModule,
