@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
-import { SignupComponent } from './signup/signup.component';
-import { SigninComponent } from './signin/signin.component';
-import { AuthenticationComponent } from './authentication.component';
-import { LogoutComponent } from './logout/logout.component';
-import { AuthService } from './auth.service';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+
 import { authRouting } from './auth.routing';
 import { AuthGuardService } from './auth-guard.service';
+import { SharedModule } from '../shared/shared.module';
+import { AuthenticationComponent } from './authentication.component';
+import { SignupComponent } from './signup/signup.component';
+import { SigninComponent } from './signin/signin.component';
+import { LogoutComponent } from './logout/logout.component';
 
 
 @NgModule({
@@ -18,9 +18,8 @@ import { AuthGuardService } from './auth-guard.service';
     LogoutComponent
   ],
   imports: [
-    CommonModule,
+    SharedModule,
     ReactiveFormsModule,
-    FormsModule,
     authRouting
   ],
   exports: [AuthenticationComponent]

@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MessageInputComponent } from './message-input/message-input.component';
-import { CanDeactivateComponent } from './can-deactivate-guard.service';
 import { Observable } from 'rxjs/Observable';
 import { ActivatedRoute } from '@angular/router';
-import { Message } from './message.model';
+import { CanDeactivateComponent } from '../shared/can-deactivate-guard/can-deactivate-guard.service';
+import { Message } from './message/message.model';
 
 @Component({
   selector: 'app-messages',

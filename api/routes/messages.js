@@ -79,9 +79,9 @@ router.delete('/:id', async (req, res) => {
     var decoded = jwt.decode(req.query.token);
 
     let message;
-    
+
     try {
-        message = Message.findById(req.params.id)        
+        message = await Message.findById(req.params.id)        
     }catch(error) {
         return res.status(500).send({
             title: 'An error occurred, no message found!',

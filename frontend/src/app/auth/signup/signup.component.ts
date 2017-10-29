@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Observable } from 'rxjs/Observable';
+
 import { AuthService } from '../auth.service';
 import { User } from '../user.model';
-import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-signup',

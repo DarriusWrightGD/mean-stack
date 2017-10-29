@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
-import { Message } from './message.model';
-import { MessageService } from './message.service';
+import { Message } from './message/message.model';
+import { MessageService } from './message/message.service';
 
 @Injectable()
 export class MessageResolverService implements Resolve<Array<Message>> {

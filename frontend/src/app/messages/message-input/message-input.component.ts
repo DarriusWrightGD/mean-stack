@@ -1,8 +1,10 @@
 import { Component, OnInit, EventEmitter, ViewChild, ElementRef, OnDestroy } from '@angular/core';
-import { Message } from '../message.model';
-import { MessageService } from '../message.service';
 import { NgForm, FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs/Subscription';
+
+import { Message } from '../message/message.model';
+import { MessageService } from '../message/message.service';
+
 
 @Component({
   selector: 'app-message-input',
@@ -34,7 +36,6 @@ export class MessageInputComponent implements OnInit, OnDestroy {
   }
 
   public onSave(form: NgForm) {
-    console.log(form);
     if (form.valid) {
       if (this.formMessage) {
         this.updateMessage(form);
@@ -56,7 +57,7 @@ export class MessageInputComponent implements OnInit, OnDestroy {
     this.messageService
     .addMessage(new Message(form.value.content, 'Darrius'))
     .subscribe(
-    message => console.log(message),
+    message => {},
     error => console.error(error)
     );
   }

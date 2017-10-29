@@ -1,36 +1,36 @@
 import { Injectable } from '@angular/core';
 import { Http, Headers } from '@angular/http';
-import 'rxjs/Rx';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/observable/throw';
 
 import { environment } from '../../environments/environment';
 import { User } from './user.model';
-import { ErrorService } from '../shared/error/error.service';
+import { ErrorService } from '../core/error/error.service';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable()
 export class AuthService {
+  private contentHeaders = new HttpHeaders({'Content-Type': 'application/json'});
 
-  constructor(private http: Http, private errorService: ErrorService) { }
+  constructor(private http: HttpClient, private errorService: ErrorService) { }
 
   public signup(user: User) {
     const body = JSON.stringify(user);
-    const headers = new Headers({'Content-Type': 'application/json'});
-    return this.http.post(`${environment.apiUrl}/user`, user, {headers: headers})
-      .map(response => response.json())
+    return this.http.post<any>(`${environment.apiUrl}/user`, user, {headers: this.contentHeaders})
       .catch(error => {
-        this.errorService.handleError(error.json());
-        return Observable.throw(error.json());
+        this.errorService.handleError(error);
+        return Observable.throw(error);
       });
   }
 
   public signin(user: User) {
     const body = JSON.stringify(user);
-    const headers = new Headers({'Content-Type': 'application/json'});
-    return this.http.post(`${environment.apiUrl}/user/signin`, user, {headers: headers})
-      .map(response => response.json())
+    return this.http.post<any>(`${environment.apiUrl}/user/signin`, user, {headers: this.contentHeaders})
       .catch(error => {
-        this.errorService.handleError(error.json());
-        return Observable.throw(error.json());
+        this.errorService.handleError(error);
+        return Observable.throw(error);
       });
   }
 
