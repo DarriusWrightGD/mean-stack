@@ -12,6 +12,7 @@ import { AuthGuardService } from './auth-guard.service';
 
 @NgModule({
   declarations: [
+    AuthenticationComponent,
     SignupComponent,
     SigninComponent,
     LogoutComponent
@@ -22,7 +23,7 @@ import { AuthGuardService } from './auth-guard.service';
     FormsModule,
     authRouting
   ],
-  providers: [AuthService]
+  exports: [AuthenticationComponent]
 })
 export class AuthModule {
 

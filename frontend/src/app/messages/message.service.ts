@@ -4,8 +4,8 @@ import { Http, RequestOptionsArgs, Headers, Response } from '@angular/http';
 import 'rxjs/Rx';
 import { Observable } from 'rxjs/Observable';
 import { environment } from '../../environments/environment';
-import { ErrorService } from '../errors/error.service';
 import { Subject } from 'rxjs/Subject';
+import { ErrorService } from '../shared/error/error.service';
 
 @Injectable()
 export class MessageService {

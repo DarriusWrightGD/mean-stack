@@ -7,34 +7,23 @@ import { HeaderComponent } from './shared/header/header.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AuthenticationComponent } from './auth/authentication.component';
 import { AuthService } from './auth/auth.service';
-import { ErrorComponent } from './errors/error/error.component';
-import { ErrorService } from './errors/error.service';
-import { MessageModule } from './messages/message.module';
-import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { AuthGuardService } from './auth/auth-guard.service';
 import { CanDeactivateGuardService } from './messages/can-deactivate-guard.service';
 import { ErrorPageComponent } from './errors/error-page/error-page.component';
 import { MessageResolverService } from './messages/message-resolver.service';
-import { ShortenPipe } from './shorten.pipe';
+import { CoreModule } from './core/core.module';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [
     AppComponent,
-    AuthenticationComponent,
-    HeaderComponent,
-    ErrorComponent,
-    PageNotFoundComponent,
     ErrorPageComponent
   ],
   imports: [
     BrowserModule,
-    MessageModule,
-    HttpModule,
-    AppRoutingModule
-  ],
-  providers: [AuthService, ErrorService,
-    AuthGuardService, CanDeactivateGuardService,
-    MessageResolverService
+    AppRoutingModule,
+    SharedModule,
+    CoreModule
   ],
   bootstrap: [AppComponent]
 })
