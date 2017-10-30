@@ -2,12 +2,11 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
-import { ErrorPageComponent } from './errors/error-page/error-page.component';
 import { SharedModule } from './shared/shared.module';
 import { CoreModule } from './core/core.module';
-import { ErrorsModule } from './errors/errors.module';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { AuthInterceptor } from './shared/auth.interceptor';
+import { HomeModule } from './home/home.module';
+import { StoreModule } from '@ngrx/store';
+import { homeReducer } from './home/home.reducer';
 
 @NgModule({
   declarations: [
@@ -17,7 +16,8 @@ import { AuthInterceptor } from './shared/auth.interceptor';
     BrowserModule,
     CoreModule,
     SharedModule,
-    ErrorsModule
+    HomeModule,
+    StoreModule.forRoot({'home': homeReducer})
   ],
   bootstrap: [AppComponent]
 })

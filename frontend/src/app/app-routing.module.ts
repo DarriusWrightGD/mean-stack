@@ -6,9 +6,11 @@ import { NgModule } from '@angular/core';
 import { AuthGuardService } from './auth/auth-guard.service';
 import { ErrorPageComponent } from './errors/error-page/error-page.component';
 import { MessageResolverService } from './messages/message-resolver.service';
+import { HomeComponent } from './home/home.component';
 
 const APP_ROUTES: Routes = [
-  {path: '', redirectTo: '/messages', pathMatch: 'full' },
+  {path: '', redirectTo: '/home', pathMatch: 'full' },
+  {path: 'home', component: HomeComponent},
   {path: 'messages', canLoad: [AuthGuardService], loadChildren: './messages/message.module#MessageModule' },
   {path: 'auth', loadChildren: './auth/auth.module#AuthModule' },
   {path: 'errors', loadChildren: './errors/errors.module#ErrorsModule'},

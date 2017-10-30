@@ -21,7 +21,9 @@ router.post('/', async (req, res) => {
 
 router.post('/signin', async (req, res) => {
     try {
-        let foundUser = await User.findOne({ email: req.body.email });
+        let foundUser = await User.findOne(
+            { email: req.body.email },
+        );
 
         if (!foundUser) {
             return res.status(500).send({
@@ -39,7 +41,9 @@ router.post('/signin', async (req, res) => {
             })
         }
 
-        var token = jwt.sign({ user: foundUser }, 'secret', { expiresIn: 7200 });
+        var u = _.omit(foundUser.toObject(), ['password', 'messages', '__v']);
+        console.log(JSON.stringify(u, null, 2));
+        var token = jwt.sign({ user: u}, 'secret', { expiresIn: 7200 });
         res.status(200).json({
             message: 'Successfully logged in.',
             token: token,
@@ -48,7 +52,7 @@ router.post('/signin', async (req, res) => {
     } catch (error) {
         res.status(500).send({
             title: 'An error occurred',
-            error: error
+            error: error.message
         });
     }
 });

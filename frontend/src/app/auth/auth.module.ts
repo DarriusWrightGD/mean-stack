@@ -8,6 +8,8 @@ import { AuthenticationComponent } from './authentication.component';
 import { SignupComponent } from './signup/signup.component';
 import { SigninComponent } from './signin/signin.component';
 import { LogoutComponent } from './logout/logout.component';
+import { StoreModule } from '@ngrx/store';
+import { authReducer } from './store/auth.reducer';
 
 
 @NgModule({
@@ -20,7 +22,8 @@ import { LogoutComponent } from './logout/logout.component';
   imports: [
     SharedModule,
     ReactiveFormsModule,
-    authRouting
+    authRouting,
+    StoreModule.forFeature('auth', authReducer)
   ],
   exports: [AuthenticationComponent]
 })

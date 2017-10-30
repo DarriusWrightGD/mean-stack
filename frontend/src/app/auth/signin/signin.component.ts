@@ -4,6 +4,10 @@ import { Router } from '@angular/router';
 
 import { AuthService } from '../auth.service';
 import { User } from '../user.model';
+import { Store } from '@ngrx/store';
+import { LoginUser } from '../../home/home.actions';
+import * as fromAuth from '../store/auth.reducer';
+import { SigninUser } from '../store/auth.actions';
 
 @Component({
   selector: 'app-signin',
@@ -11,7 +15,8 @@ import { User } from '../user.model';
   styleUrls: ['./signin.component.css']
 })
 export class SigninComponent implements OnInit {
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(private authService: AuthService, private router: Router,
+  private store: Store<fromAuth.FeatureState>) { }
 
   ngOnInit() {
   }
@@ -25,6 +30,7 @@ export class SigninComponent implements OnInit {
       data => {
         localStorage.setItem('token', data.token);
         localStorage.setItem('userId', data.userId);
+        this.store.dispatch(new SigninUser({token: data.token, user: this.authService.getUser()}));
         this.router.navigateByUrl('/');
       },
       error => console.error(error)

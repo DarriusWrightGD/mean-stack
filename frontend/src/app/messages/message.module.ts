@@ -21,6 +21,7 @@ import { LoggingInterceptor } from '../shared/logging.interceptor';
   ],
   providers: [MessageService, MessageResolverService
     ,
+    // TODO: figure out why this needs to be listed in the core module and this module
     {provide: HTTP_INTERCEPTORS, useClass: LoggingInterceptor, multi: true},
     {
     provide: HTTP_INTERCEPTORS,

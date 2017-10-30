@@ -503,3 +503,12 @@ This pipe is for converting promises and observables into the data that we expec
 ``` html
 <p>{{ appStatus | async | uppercase }}</p>
 ```
+
+
+## Ngrx
+
+Use to manage the state of an application.
+
+State describes what the user sees, and some pieces of that state we would like to store.
+
+In redux you have one store that manages the state of the application. To change that state you will create actions which upon dispatch will be sent to a reducer which will change the state.

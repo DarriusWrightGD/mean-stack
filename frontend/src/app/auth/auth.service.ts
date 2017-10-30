@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http, Headers } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
+import * as jwtDecode from 'jwt-decode';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
@@ -32,6 +33,12 @@ export class AuthService {
         this.errorService.handleError(error);
         return Observable.throw(error);
       });
+  }
+
+  public getUser(): User {
+    const decodedResult = jwtDecode(localStorage.getItem('token'));
+
+    return decodedResult && decodedResult.user || null;
   }
 
   public logout() {
