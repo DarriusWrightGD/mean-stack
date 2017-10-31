@@ -21,6 +21,7 @@ export class HomeComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    debugger;
     this.homeState = this.store.select('auth');
     this.homeState.do(result => {
       debugger;
